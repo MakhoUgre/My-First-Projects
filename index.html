@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Python Games</title>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+</head>
+<body style="font-family: Arial, sans-serif; text-align: center; background-color: #f0f2f5; padding-top: 50px;">
+
+    <h1>ითამაშე "Rock, Paper, Scissors" ბრაუზერში!</h1>
+    <p>შედეგი გამოჩნდება ქვემოთ, ტერმინალის მსგავსად:</p>
+
+    <div id="output" style="background: #222; color: #0f0; padding: 20px; border-radius: 10px; width: 80%; margin: auto; min-height: 200px; text-align: left;"></div>
+
+    <script type="py" target="output">
+import random
+
+# თქვენი კოდის ადაპტაცია ბრაუზერისთვის
+options = ['rock', 'paper', 'scissors']
+user_wins = 0
+computer_wins = 0
+
+print("თამაში დაიწყო! (ბრაუზერში input-ის ფანჯარა გამოჩნდება ზემოთ)")
+
+# ვითამაშოთ 3 ხელი
+for i in range(3):
+    user_input = input('Type Rock/Paper/Scissors: ').lower()
+    
+    if user_input not in options:
+        print(f"არასწორი არჩევანი: {user_input}")
+        continue
+
+    random_number = random.randint(0, 2)
+    computer_pick = options[random_number]
+    print(f'Computer picked: {computer_pick}!')
+
+    if user_input == 'rock' and computer_pick == 'scissors':
+        print('You won!')
+        user_wins += 1
+    elif user_input == 'paper' and computer_pick == 'rock':
+        print('You won!')
+        user_wins += 1
+    elif user_input == 'scissors' and computer_pick == 'paper':
+        print('You won!')
+        user_wins += 1
+    elif user_input == computer_pick:
+        print('It is a tie!')
+    else:
+        print('You lost!')
+        computer_wins += 1
+
+print(f'\nFinal Score - You: {user_wins}, Computer: {computer_wins}')
+    </script>
+
+</body>
+</html>
