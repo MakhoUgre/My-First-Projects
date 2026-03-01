@@ -2,39 +2,48 @@
 <html lang="ka">
 <head>
     <meta charset="UTF-8">
-    <title>Python Rock Paper Scissors</title>
-    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
-    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+    <title>Python Game - Fixed</title>
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
     <style>
-        body { font-family: sans-serif; text-align: center; background: #2c3e50; color: white; }
-        .btn { padding: 10px 20px; font-size: 18px; margin: 5px; cursor: pointer; border-radius: 5px; border: none; }
-        .rock { background: #e74c3c; color: white; }
-        .paper { background: #ecf0f1; color: #2c3e50; }
-        .scissors { background: #3498db; color: white; }
-        #output { background: #1a1a1a; color: #00ff00; padding: 20px; width: 60%; margin: 20px auto; border-radius: 10px; text-align: left; min-height: 150px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background: #1a1a2e; color: #ffffff; padding: 40px; }
+        .container { background: #16213e; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: inline-block; }
+        .btn { padding: 15px 25px; font-size: 20px; margin: 10px; cursor: pointer; border-radius: 8px; border: none; transition: 0.3s; font-weight: bold; }
+        .rock { background: #e94560; color: white; }
+        .paper { background: #0f3460; color: white; }
+        .scissors { background: #533483; color: white; }
+        .btn:hover { transform: scale(1.1); opacity: 0.9; }
+        #output { background: #0f3460; color: #00d4ff; padding: 20px; width: 350px; margin: 20px auto; border-radius: 10px; text-align: left; border: 1px solid #533483; font-family: monospace; white-space: pre-line; }
     </style>
 </head>
 <body>
 
-    <h1>Rock, Paper, Scissors (Python)</h1>
-    <p>აირჩიეთ ერთ-ერთი:</p>
+    <div class="container">
+        <h1>Rock, Paper, Scissors</h1>
+        <p>დაელოდეთ 10-15 წამს ჩატვირთვამდე, შემდეგ აირჩიეთ:</p>
 
-    <button class="btn rock" py-click="play_game('rock')">Rock</button>
-    <button class="btn paper" py-click="play_game('paper')">Paper</button>
-    <button class="btn scissors" py-click="play_game('scissors')">Scissors</button>
+        <button id="rock-btn" class="btn rock">Rock</button>
+        <button id="paper-btn" class="btn paper">Paper</button>
+        <button id="scissors-btn" class="btn scissors">Scissors</button>
 
-    <div id="output">დააჭირეთ ღილაკს თამაშის დასაწყებად...</div>
+        <div id="output">ჩატვირთვა... (Loading Python)</div>
+    </div>
 
-    <script type="py">
+    <py-script>
 import random
-from pyscript import display
+from pyodide.ffi import create_proxy
 
+# თქვენი ორიგინალური ლოგიკა
 options = ['rock', 'paper', 'scissors']
 
-def play_game(user_choice):
+def play_game(event):
+    # ვიგებთ რომელ ღილაკს დააჭირეს ID-ს მიხედვით
+    btn_id = event.target.id
+    user_choice = btn_id.replace('-btn', '')
+    
     computer_choice = random.choice(options)
+    
     result = ""
-
     if user_choice == computer_choice:
         result = "ფრეა! 🤝"
     elif (user_choice == 'rock' and computer_choice == 'scissors') or \
@@ -44,14 +53,21 @@ def play_game(user_choice):
     else:
         result = "თქვენ წააგეთ! 🤖"
 
-    # შედეგის გამოტანა ეკრანზე
-    output_text = f"თქვენი არჩევანი: {user_choice.upper()}\n"
-    output_text += f"კომპიუტერის არჩევანი: {computer_choice.upper()}\n"
-    output_text += f"შედეგი: {result}\n"
-    output_text += "------------------------"
-    
-    display(output_text, target="output", append=False)
-    </script>
+    output_div = Element("output")
+    output_div.write(f"თქვენ: {user_choice.upper()}\nკომპიუტერი: {computer_choice.upper()}\nშედეგი: {result}")
+
+# ღილაკებზე ფუნქციების მიბმა
+rock_proxy = create_proxy(play_game)
+Element("rock-btn").element.addEventListener("click", rock_proxy)
+
+paper_proxy = create_proxy(play_game)
+Element("paper-btn").element.addEventListener("click", paper_proxy)
+
+scissors_proxy = create_proxy(play_game)
+Element("scissors-btn").element.addEventListener("click", scissors_proxy)
+
+Element("output").write("თამაში მზად არის! აირჩიეთ.")
+    </py-script>
 
 </body>
 </html>
